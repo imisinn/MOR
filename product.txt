@@ -1,0 +1,10 @@
+予定の流れ
+
+解析するソースファイルをaaa.cとする。
+
+include文が除去された.cファイルを作成する。
+adlintize -o adlintを実行する
+adlint_traits.ymlの言語設定を変更する
+cd adlint
+make verbose-all(解析を行う)
+aaa.c.msg.csvから必要な情報を引き出す
