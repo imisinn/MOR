@@ -12,6 +12,8 @@ elif [[ $1 =~ .*\.c ]]; then
   rm adlint_traits.yml
   mv hoge.yml adlint_traits.yml
   make verbose-all
+  cd ../
+  java pickup_error $1
 else
   echo "c言語のファイルを用いてください"
 fi
