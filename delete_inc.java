@@ -20,6 +20,7 @@ public class delete_inc{
 
     while((line = in.readLine()) != null){
       if(!line.contains(delete_line))out.println(line);
+      else out.println("//"+line);
     }
     in.close();
     out.close();
