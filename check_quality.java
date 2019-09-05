@@ -8,22 +8,22 @@ import java.io.FileWriter;
 public class check_quality{
   void run(String[] args)throws IOException{
     File fileread = new File("adlint/"+args[0]+".c.met.csv");
-    File filewrite = new File(args[0] + ".output.txt");
+    File filewrite = new File(args[0] + ".result.csv");
     CheckQualityMethod(fileread,filewrite);
   }
 
   void CheckQualityMethod(File fileread,File filewrite)throws IOException{
     BufferedReader in = new BufferedReader(new FileReader(fileread));
-    //PrintWriter out = new PrintWriter(new FileWriter(filewrite));
+    PrintWriter out = new PrintWriter(new FileWriter(filewrite));
     String line;
     String nest_line;
 
     while((line = in.readLine()) != null){
       String[] metrics_words = line.split(",",-1);
-      if(metrics_words[1].equals("FN_NEST"))System.out.println(line);
+      if(metrics_words[1].equals("FN_NEST"))out.println(line);
     }
     in.close();
-    //out.close();
+    out.close();
   }
 
   public static void main(String[] args)throws IOException{
