@@ -7,12 +7,16 @@ import java.io.FileWriter;
 
 public class check_quality{
   void run(String[] args)throws IOException{
-    File fileread = new File("adlint/"+args[0]+".c.met.csv");
-    File filewrite = new File(args[0] + ".result.csv");
-    CheckQualityMethod(fileread,filewrite);
+    CheckQualityMethod(args[0]);
   }
 
-  void CheckQualityMethod(File fileread,File filewrite)throws IOException{
+  void CheckQualityMethod(String check_file)throws IOException{
+    check_nest(check_file);
+  }
+
+  void check_nest(String check_file)throws IOException{
+    File fileread = new File("adlint/" + check_file + ".c.met.csv");
+    File filewrite = new File(check_file + ".result.csv");
     BufferedReader in = new BufferedReader(new FileReader(fileread));
     PrintWriter out = new PrintWriter(new FileWriter(filewrite));
     String line;
