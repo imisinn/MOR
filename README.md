@@ -14,3 +14,7 @@ OS:MacOS Mojave 10.14.4
 #### インストールの方法
 
 * 参考先https://researchmap.jp/jo4a9svxt-1778110/
+
+## 出力内容について  
+
+* MAX_F_NEST:関数内の最大のネスト数
