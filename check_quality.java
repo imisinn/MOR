@@ -13,6 +13,22 @@ public class check_quality{
   void CheckQualityMethod(String check_file)throws IOException{
     nest(check_file);
     function_line(check_file);
+    check_goto(check_file);
+  }
+
+  void check_goto(String check_file)throws IOException{
+    File fileread = new File("adlint/" + check_file + ".c.msg.csv");
+    File filewrite = new File(check_file + ".result.csv");
+    BufferedReader in = new BufferedReader(new FileReader(fileread));
+    PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
+    String line;
+
+    while((line = in.readLine()) != null){
+      String[] metrics_words = line.split(",",-1);
+      if(metrics_words.length >= 5)if(metrics_words[5].equals("W1072"))out.println("GOTO,"+metrics_words[1]+","+metrics_words[2]+","+metrics_words[3]);
+    }
+    in.close();
+    out.close();
   }
 
   void function_line(String check_file)throws IOException{
@@ -24,7 +40,7 @@ public class check_quality{
 
     while((line = in.readLine()) != null){
       String[] metrics_words = line.split(",",-1);
-      if(metrics_words[1].equals("FN_LINE"))out.println(make_message(metrics_words,"MAX_F_LINE"));//ネストに関する情報の抽出//ネストに関する情報の抽出
+      if(metrics_words[1].equals("FN_LINE"))out.println(make_message(metrics_words,"MAX_F_LINE"));//行数に関する情報の抽出
     }
     in.close();
     out.close();
@@ -39,7 +55,7 @@ public class check_quality{
 
     while((line = in.readLine()) != null){
       String[] metrics_words = line.split(",",-1);
-      if(metrics_words[1].equals("FN_NEST"))out.println(make_message(metrics_words,"MAX_F_NEST"));//ネストに関する情報の抽出//ネストに関する情報の抽出
+      if(metrics_words[1].equals("FN_NEST"))out.println(make_message(metrics_words,"MAX_F_NEST"));//ネストに関する情報の抽出
     }
     in.close();
     out.close();
