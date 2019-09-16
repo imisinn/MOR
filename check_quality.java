@@ -4,6 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.FileWriter;
+import java.util.ArrayList;
+
+class functions{
+  String name;//関数名
+  Integer start;//関数の始まりの行数
+  Integer end;//関数の終わりの行数
+}
 
 public class check_quality{
   void run(String[] args)throws IOException{
@@ -14,6 +21,33 @@ public class check_quality{
     nest(check_file);
     function_line(check_file);
     check_goto(check_file);
+    check_name(check_file);
+  }
+  void check_name(String check_file)throws IOException{
+    File fileread = new File(check_file + ".result.csv");
+    File filewrite = new File(check_file + ".result.csv");
+    BufferedReader in = new BufferedReader(new FileReader(fileread));
+    PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
+    String line;
+    ArrayList<functions> ListFunc = new ArrayList<>();
+
+    while((line = in.readLine()) != null){//関数に関する情報の取得
+      String[] metrics_words = line.split(",",-1);
+      if(metrics_words[0].equals("MAX_F_LINE")){
+        ListFunc.add(init_functions(metrics_words));
+        System.out.println(init_functions(metrics_words).name + "," + init_functions(metrics_words).start +","+ init_functions(metrics_words).end);
+      }
+    }
+    in.close();
+    out.close();
+  }
+
+  functions init_functions(String[] words)throws IOException{
+    functions func = new functions();
+    func.name = words[1];
+    func.start = Integer.parseInt(words[3]);
+    func.end = Integer.parseInt(words[3]) + Integer.parseInt(words[5]);
+    return func;
   }
 
   void check_goto(String check_file)throws IOException{
