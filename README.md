@@ -18,3 +18,4 @@ OS:MacOS Mojave 10.14.4
 ## 出力内容について  
 
 * MAX_F_NEST:関数内の最大のネスト数
+* MAX_F_LINE:関数内の行数
