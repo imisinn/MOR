@@ -19,3 +19,5 @@ OS:MacOS Mojave 10.14.4
 
 * MAX_F_NEST:関数内の最大のネスト数
 * MAX_F_LINE:関数内の行数
+* NAME_FUNCTION:関数名
+* GOTO:goto文

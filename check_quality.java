@@ -23,30 +23,45 @@ public class check_quality{
     check_goto(check_file);
     check_name(check_file);
   }
+
   void check_name(String check_file)throws IOException{
+    check_function_name(check_file);
+  }
+
+
+  }
+  void check_function_name(String check_file)throws IOException{
     File fileread = new File(check_file + ".result.csv");
     File filewrite = new File(check_file + ".result.csv");
     BufferedReader in = new BufferedReader(new FileReader(fileread));
     PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
     String line;
     ArrayList<functions> ListFunc = new ArrayList<>();
+    String file_place = new String();
 
     while((line = in.readLine()) != null){//関数に関する情報の取得
       String[] metrics_words = line.split(",",-1);
+      file_place = metrics_words[2];
       if(metrics_words[0].equals("MAX_F_LINE")){
-        ListFunc.add(init_functions(metrics_words));
-        System.out.println(init_functions(metrics_words).name + "," + init_functions(metrics_words).start +","+ init_functions(metrics_words).end);
+        ListFunc.add(make_functions(metrics_words));
+        //System.out.println(make_functions(metrics_words).name + "," + make_functions(metrics_words).start +","+ make_functions(metrics_words).end);
+        //System.out.println(" : " + metrics_words[5]);
       }
     }
+
+    for(functions aFunction:ListFunc){
+      out.println("NAME_FUNCTION," + aFunction.name + "," + file_place +  "," + aFunction.start + ","+ aFunction.end);//関数名一覧をファイルに出力
+    }
+
     in.close();
     out.close();
   }
 
-  functions init_functions(String[] words)throws IOException{
+  functions make_functions(String[] words)throws IOException{
     functions func = new functions();
     func.name = words[1];
     func.start = Integer.parseInt(words[3]);
-    func.end = Integer.parseInt(words[3]) + Integer.parseInt(words[5]);
+    func.end = Integer.parseInt(words[3]) + Integer.parseInt(words[5]) -1;
     return func;
   }
 
