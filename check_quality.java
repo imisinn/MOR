@@ -28,8 +28,6 @@ public class check_quality{
     check_function_name(check_file);
   }
 
-
-  }
   void check_function_name(String check_file)throws IOException{
     File fileread = new File(check_file + ".result.csv");
     File filewrite = new File(check_file + ".result.csv");
