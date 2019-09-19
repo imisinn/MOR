@@ -14,6 +14,7 @@ elif [[ $1 =~ .*\.c ]]; then
   make verbose-all
   cd ../
   java pickup_error $1
+  clang -cc1 -ast-dump $1 &> AST.txt
 else
   echo "c言語のファイルを用いてください"
 fi

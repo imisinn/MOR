@@ -6,13 +6,19 @@ import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
-class functions{
-  String name;//関数名
-  Integer start;//関数の始まりの行数
-  Integer end;//関数の終わりの行数
-}
-
 public class check_quality{
+  public class functions{
+    String name;//関数名
+    Integer start;//関数の始まりの行数
+    Integer end;//関数の終わりの行数
+  }
+
+  public class avaiables{
+    String name;//変数名
+    //Integer line;//変数の宣言の行数
+    //String function;//どこの関数で宣言されているか
+  }
+
   void run(String[] args)throws IOException{
     CheckQualityMethod(args[0]);
   }
@@ -26,6 +32,50 @@ public class check_quality{
 
   void check_name(String check_file)throws IOException{
     check_function_name(check_file);
+    check_avaiable_name(check_file);
+  }
+
+  void check_avaiable_name(String check_file)throws IOException{
+    File fileread = new File("AST.txt");
+    File filewrite = new File(check_file + ".result.csv");
+    BufferedReader in = new BufferedReader(new FileReader(fileread));
+    PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
+    String line,linesave;
+    Boolean bool = new Boolean(false);
+    Integer count = new Integer(1);
+    ArrayList<avaiables> List_Avaiable = new ArrayList<>();
+
+    while((line = in.readLine()) != null){
+      String[] words = line.split(" ",-1);
+      for(String word:words){
+        if(word.contains("VarDecl") && !word.contains("ParmVarDecl"))bool = true;//変数の宣言をしている文かのチェック
+        if(word.contains("DeclStmt"))linesave = line;
+      }
+      if(bool)List_Avaiable.add(make_avaiable(line,words));
+      bool = false;//変数のリセット
+      count++;//行数のカウント
+    }
+
+    for(avaiables avai:List_Avaiable){
+      out.println("NAME_AVAIABLE," + avai.name);//関数名一覧をファイルに出力
+    }
+
+    in.close();
+    out.close();
+  }
+
+  avaiables make_avaiable(String line,String[] words)throws IOException{
+    String name = new String();
+    avaiables avai = new avaiables();
+    Boolean bool = new Boolean(false);
+    for(String word:words){//変数名の取得
+      if(bool == true){
+        avai.name = word;
+        break;
+      }
+      if(word.equals("used"))bool = true;
+    }
+    return avai;
   }
 
   void check_function_name(String check_file)throws IOException{
@@ -42,8 +92,6 @@ public class check_quality{
       file_place = metrics_words[2];
       if(metrics_words[0].equals("MAX_F_LINE")){
         ListFunc.add(make_functions(metrics_words));
-        //System.out.println(make_functions(metrics_words).name + "," + make_functions(metrics_words).start +","+ make_functions(metrics_words).end);
-        //System.out.println(" : " + metrics_words[5]);
       }
     }
 
