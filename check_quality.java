@@ -15,7 +15,7 @@ public class check_quality{
 
   public class avaiables{
     String name;//変数名
-    String num_line;//変数の宣言の行数
+    Integer num_line;//変数の宣言の行数
     //String function;//どこの関数で宣言されているか
   }
 
@@ -81,18 +81,37 @@ public class check_quality{
 
     for(String word:words){
       if(word.contains("line:")){//VarDeclの行数内に行数があるかの検知。
-        avai.num_line = word;
+        avai.num_line = pichup_num_line(word);
       }
     }
     if(avai.num_line == null){
       String[] save_words = save_line.split(" ",-1);
-      for(String save_word:save_words)if(save_word.contains("line:"))avai.num_line = save_word;
+      for(String save_word:save_words)if(save_word.contains("line:")){
+        Integer line_num = pichup_num_line(save_word);
+        avai.num_line = line_num;
+      }
     }
-    //if(avai.num_line == null)System.out.println("if_null:"+save_line);
-    //System.out.println("name: "+ avai.name +"wordline:" + avai.num_line);
-
     return avai;
   }
+
+  Integer pichup_num_line(String words)throws IOException{
+    Integer num = new Integer(0);
+    String[] word = words.split(":",-1);
+    if(word.length < 3)return -1;
+    if(!isNumber(word[1]))return -2;
+    num = Integer.parseInt(word[1]);
+    return num;
+  }
+
+  Boolean isNumber(String num){
+    try{
+      Integer.parseInt(num);
+      return true;
+    } catch (NumberFormatException e){
+      return false;
+    }
+  }
+
 
   void check_function_name(String check_file)throws IOException{
     File fileread = new File(check_file + ".result.csv");
