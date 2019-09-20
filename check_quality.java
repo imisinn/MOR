@@ -15,7 +15,7 @@ public class check_quality{
 
   public class avaiables{
     String name;//変数名
-    //Integer line;//変数の宣言の行数
+    String num_line;//変数の宣言の行数
     //String function;//どこの関数で宣言されているか
   }
 
@@ -40,7 +40,7 @@ public class check_quality{
     File filewrite = new File(check_file + ".result.csv");
     BufferedReader in = new BufferedReader(new FileReader(fileread));
     PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
-    String line,linesave;
+    String line,linesave = new String();
     Boolean bool = new Boolean(false);
     Integer count = new Integer(1);
     ArrayList<avaiables> List_Avaiable = new ArrayList<>();
@@ -49,32 +49,48 @@ public class check_quality{
       String[] words = line.split(" ",-1);
       for(String word:words){
         if(word.contains("VarDecl") && !word.contains("ParmVarDecl"))bool = true;//変数の宣言をしている文かのチェック
-        if(word.contains("DeclStmt"))linesave = line;
+        if(word.contains("line:"))linesave = line;
       }
-      if(bool)List_Avaiable.add(make_avaiable(line,words));
+      if(bool)List_Avaiable.add(make_avaiable(line,words,linesave));
       bool = false;//変数のリセット
       count++;//行数のカウント
+
     }
 
     for(avaiables avai:List_Avaiable){
-      out.println("NAME_AVAIABLE," + avai.name);//関数名一覧をファイルに出力
+      out.println("NAME_AVAIABLE," + avai.name + "," + avai.num_line);//関数名一覧をファイルに出力
     }
 
     in.close();
     out.close();
   }
 
-  avaiables make_avaiable(String line,String[] words)throws IOException{
+  avaiables make_avaiable(String line,String[] words,String save_line)throws IOException{
     String name = new String();
     avaiables avai = new avaiables();
     Boolean bool = new Boolean(false);
+    String save = new String();
+
     for(String word:words){//変数名の取得
       if(bool == true){
         avai.name = word;
         break;
       }
-      if(word.equals("used"))bool = true;
+      if(word.equals("used"))bool = true;//used の次に変数名が来るため、目印としてtrueに変更している。
     }
+
+    for(String word:words){
+      if(word.contains("line:")){//VarDeclの行数内に行数があるかの検知。
+        avai.num_line = word;
+      }
+    }
+    if(avai.num_line == null){
+      String[] save_words = save_line.split(" ",-1);
+      for(String save_word:save_words)if(save_word.contains("line:"))avai.num_line = save_word;
+    }
+    //if(avai.num_line == null)System.out.println("if_null:"+save_line);
+    //System.out.println("name: "+ avai.name +"wordline:" + avai.num_line);
+
     return avai;
   }
 
