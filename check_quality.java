@@ -47,19 +47,14 @@ public class check_quality{
 
     while((line = in.readLine()) != null){
       String[] words = line.split(" ",-1);
-      for(String word:words){
-        if(word.contains("VarDecl") && !word.contains("ParmVarDecl"))bool = true;//変数の宣言をしている文かのチェック
-        if(word.contains("line:"))linesave = line;
-      }
+      if(line.contains("VarDecl") && !line.contains("ParmVarDecl"))bool = true;//変数の抽出部　始まり
+      if(line.contains("line:"))linesave = line;
       if(bool)List_Avaiable.add(make_avaiable(line,words,linesave));
-      bool = false;//変数のリセット
+      bool = false;//変数のリセット　　//変数の抽出部　終わり
       count++;//行数のカウント
-
     }
 
-    for(avaiables avai:List_Avaiable){
-      out.println("NAME_AVAIABLE," + avai.name + "," + avai.num_line);//関数名一覧をファイルに出力
-    }
+    for(avaiables avai:List_Avaiable)out.println("NAME_AVAIABLE," + avai.name + "," + avai.num_line);//関数名一覧をファイルに出力
 
     in.close();
     out.close();
