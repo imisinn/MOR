@@ -37,7 +37,7 @@ public class check_quality{
 
   void check_avaiable_name(String check_file)throws IOException{
     File fileread = new File("AST.txt");
-    File filewrite = new File(check_file + ".result.csv");
+    File filewrite = new File(check_file + ".info.csv");
     BufferedReader in = new BufferedReader(new FileReader(fileread));
     PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
     String line,linesave = new String(),arg_saveline = new String();
@@ -116,8 +116,8 @@ public class check_quality{
 
 
   void check_function_name(String check_file)throws IOException{
-    File fileread = new File(check_file + ".result.csv");
-    File filewrite = new File(check_file + ".result.csv");
+    File fileread = new File(check_file + ".info.csv");
+    File filewrite = new File(check_file + ".info.csv");
     BufferedReader in = new BufferedReader(new FileReader(fileread));
     PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
     String line;
@@ -150,7 +150,7 @@ public class check_quality{
 
   void check_goto(String check_file)throws IOException{
     File fileread = new File("adlint/" + check_file + ".c.msg.csv");
-    File filewrite = new File(check_file + ".result.csv");
+    File filewrite = new File(check_file + ".info.csv");
     BufferedReader in = new BufferedReader(new FileReader(fileread));
     PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
     String line;
@@ -165,7 +165,7 @@ public class check_quality{
 
   void function_line(String check_file)throws IOException{
     File fileread = new File("adlint/" + check_file + ".c.met.csv");
-    File filewrite = new File(check_file + ".result.csv");
+    File filewrite = new File(check_file + ".info.csv");
     BufferedReader in = new BufferedReader(new FileReader(fileread));
     PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
     String line;
@@ -180,7 +180,7 @@ public class check_quality{
 
   void nest(String check_file)throws IOException{
     File fileread = new File("adlint/" + check_file + ".c.met.csv");
-    File filewrite = new File(check_file + ".result.csv");
+    File filewrite = new File(check_file + ".info.csv");
     BufferedReader in = new BufferedReader(new FileReader(fileread));
     PrintWriter out = new PrintWriter(new FileWriter(filewrite));
     String line;
