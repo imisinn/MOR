@@ -16,7 +16,7 @@ public class check_quality{
   public class avaiables{
     String name;//変数名
     Integer num_line;//変数の宣言の行数
-    //String function;//どこの関数で宣言されているか
+    Integer type;//1:変数 2:仮引数
   }
 
   void run(String[] args)throws IOException{
@@ -40,27 +40,33 @@ public class check_quality{
     File filewrite = new File(check_file + ".result.csv");
     BufferedReader in = new BufferedReader(new FileReader(fileread));
     PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
-    String line,linesave = new String();
+    String line,linesave = new String(),arg_saveline = new String();
     Boolean bool = new Boolean(false);
     Integer count = new Integer(1);
     ArrayList<avaiables> List_Avaiable = new ArrayList<>();
 
     while((line = in.readLine()) != null){
-      String[] words = line.split(" ",-1);
       if(line.contains("VarDecl") && !line.contains("ParmVarDecl"))bool = true;//変数の抽出部　始まり
       if(line.contains("line:"))linesave = line;
-      if(bool)List_Avaiable.add(make_avaiable(line,words,linesave));
-      bool = false;//変数のリセット　　//変数の抽出部　終わり
+      if(bool)List_Avaiable.add(make_avaiable(line,linesave,1));
+      bool = false;//変数の抽出部　終わり
+
+      //仮引数の抽出部
+      if(line.contains("FunctionDecl"))arg_saveline = line;
+      if(arg_saveline.contains("used") && (line.contains("ParmVarDecl") && line.contains("used")))List_Avaiable.add(make_avaiable(line,arg_saveline,2));
+
       count++;//行数のカウント
     }
 
-    for(avaiables avai:List_Avaiable)out.println("NAME_AVAIABLE," + avai.name + "," + avai.num_line);//関数名一覧をファイルに出力
+    for(avaiables avai:List_Avaiable)if(avai.type == 1)out.println("NAME_AVAIABLE," + avai.name + "," + avai.num_line);//変数名一覧をファイルに出力
+    for(avaiables avai:List_Avaiable)if(avai.type == 2)out.println("NAME_ARGUMENT," + avai.name + "," + avai.num_line);//仮引数情報をファイルに出力
 
     in.close();
     out.close();
   }
 
-  avaiables make_avaiable(String line,String[] words,String save_line)throws IOException{
+  avaiables make_avaiable(String line,String save_line,Integer type)throws IOException{
+    String[] words = line.split(" ",-1);
     String name = new String();
     avaiables avai = new avaiables();
     Boolean bool = new Boolean(false);
@@ -86,6 +92,7 @@ public class check_quality{
         avai.num_line = line_num;
       }
     }
+    avai.type = type;
     return avai;
   }
 

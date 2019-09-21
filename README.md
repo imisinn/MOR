@@ -21,5 +21,6 @@ OS:MacOS Mojave 10.14.4
 * MAX_F_LINE:関数内の行数
 * NAME_FUNCTION:関数名
 * GOTO:goto文
-* NAME_FUNCTION:関数名
-* NAME_AVAIABLE:変数名
+* NAME_FUNCTION:関数名と行数
+* NAME_AVAIABLE:変数名と行数
+* NAME_ARGUMENT:仮引数名と行数
