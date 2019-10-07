@@ -17,7 +17,10 @@ public class check_quality{
     String name;//変数名
     Integer num_line;//変数の宣言の行数
     Integer type;//1:変数 2:仮引数
+    Integer flag_used;//使ったかどうかのフラグ　0:使っていない　1:使った
   }
+
+  Integer f_comentout = new Integer(0);
 
   void run(String[] args)throws IOException{
     CheckQualityMethod(args[0]);
@@ -31,11 +34,78 @@ public class check_quality{
   }
 
   void check_name(String check_file)throws IOException{
-    check_function_name(check_file);
-    check_avaiable_name(check_file);
+    ArrayList<avaiables> List_Avaiable = new ArrayList<>();
+    ArrayList<functions> ListFunc = new ArrayList<>();
+    ListFunc = check_function_name(check_file);
+    List_Avaiable = check_avaiable_name(check_file);
+    check_name_unused(check_file,List_Avaiable,ListFunc);
   }
 
-  void check_avaiable_name(String check_file)throws IOException{
+  void check_name_unused(String check_file,ArrayList<avaiables> List_Avaiable,ArrayList<functions> ListFunc)throws IOException{
+    BufferedReader in = new BufferedReader(new FileReader(check_file));
+    //PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
+    String line = new String();
+
+    while((line = in.readLine()) != null){
+      line = Comentout(line);
+    }
+  }
+
+  String Comentout(String line){
+    line = ComentoutDoubleSlash(line);
+    if(line != null)line = RockComent(line);
+    System.out.println(line);
+    return line;
+  }
+
+  String RockComent(String line){
+    String save_line = new String();
+
+    if(f_comentout == 0){//解析部よりも前に/*が無い場合
+      if(line.contains("/*") && line.contains("*/")){//行内でロックコメントが完結している場合
+        if(!line.substring(0).equals("/")){
+          String[] words = line.split("/*");
+          save_line += words[0];
+        }
+        if(!line.substring(line.length() -1).equals("/")){
+          String[] words = line.split("*/");
+          save_line += words[1];
+        }
+        return save_line;
+      }else if(line.contains("/*")){//ロックコメントの/*だけがあった場合の処理
+        if(!line.substring(0).equals("/")){
+          String[] words = line.split("/*");
+          save_line += words[0];
+        }
+        f_comentout = 1;
+        return save_line;
+      }
+    }else{//解析部よりも前に/*があり、*/がない場合
+      if(line.contains("*/")){//ロックコメントの*/だけがあった場合の処理
+        if(!line.substring(line.length() -1).equals("/")){
+          System.out.println("通過");
+          String[] words = line.split("*/");
+          save_line += words[1];
+        }
+        f_comentout = 0;
+        return save_line;
+      }else{
+        return null;//ロックコメントの*/が無くコメントアウト内なのでnullを返す
+      }
+    }
+    return line;
+  }
+
+  String ComentoutDoubleSlash(String line){
+    String[] words;
+    if(line.contains("//")){
+      words = line.split("//");
+      line = words[0];
+    }
+    return line;
+  }
+
+  ArrayList<avaiables> check_avaiable_name(String check_file)throws IOException{
     File fileread = new File("AST.txt");
     File filewrite = new File(check_file + ".info.csv");
     BufferedReader in = new BufferedReader(new FileReader(fileread));
@@ -63,6 +133,7 @@ public class check_quality{
 
     in.close();
     out.close();
+    return List_Avaiable;
   }
 
   avaiables make_avaiable(String line,String save_line,Integer type)throws IOException{
@@ -71,6 +142,8 @@ public class check_quality{
     avaiables avai = new avaiables();
     Boolean bool = new Boolean(false);
     String save = new String();
+
+    avai.flag_used = 0;
 
     for(String word:words){//変数名の取得
       if(bool == true){
@@ -115,7 +188,7 @@ public class check_quality{
   }
 
 
-  void check_function_name(String check_file)throws IOException{
+  ArrayList<functions> check_function_name(String check_file)throws IOException{
     File fileread = new File(check_file + ".info.csv");
     File filewrite = new File(check_file + ".info.csv");
     BufferedReader in = new BufferedReader(new FileReader(fileread));
@@ -138,6 +211,8 @@ public class check_quality{
 
     in.close();
     out.close();
+
+    return ListFunc;
   }
 
   functions make_functions(String[] words)throws IOException{
