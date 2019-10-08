@@ -17,7 +17,7 @@ public class check_quality{
     String name;//変数名
     Integer num_line;//変数の宣言の行数
     Integer type;//1:変数 2:仮引数
-    Integer flag_used;//使ったかどうかのフラグ　0:使っていない　1:使った
+    Integer flag_unused;//使ったかどうかのフラグ　0:使っていない　1:使った
   }
 
   Integer f_comentout = new Integer(0);
@@ -45,16 +45,26 @@ public class check_quality{
     BufferedReader in = new BufferedReader(new FileReader(check_file));
     //PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
     String line = new String();
+    Integer line_count = new Integer(1);//何行目を検査しているかを記憶する変数
 
     while((line = in.readLine()) != null){
       line = Comentout(line);
+      for(avaiables avai : List_Avaiable){
+        //if(line.contains(avai.name))check_unused(line,ListFunc,avai,line_count)
+      }
+      line_count++;
     }
+    for(avaiables avai: List_Avaiable)System.out.println(avai.type + ":" +  avai.name + ":" + avai.flag_unused);//全ての変数、仮引数の未使用であるか関する情報の出力
+  }
+
+  void check_unused(String line,ArrayList<functions> ListFunc,avaiables avai,Integer line_count){
+    //if(avai.num_line.equals(line_count));
   }
 
   String Comentout(String line){
     line = ComentoutDoubleSlash(line);
     if(line != null)line = RockComent(line);
-    System.out.println(line);
+    //System.out.println(line);
     return line;
   }
 
@@ -71,6 +81,7 @@ public class check_quality{
           String[] words = line.split("*/");
           save_line += words[1];
         }
+        if(save_line == null)save_line = "";
         return save_line;
       }else if(line.contains("/*")){//ロックコメントの/*だけがあった場合の処理
         if(!line.substring(0).equals("/")){
@@ -78,21 +89,23 @@ public class check_quality{
           save_line += words[0];
         }
         f_comentout = 1;
+        if(save_line == null)save_line = "";
         return save_line;
       }
     }else{//解析部よりも前に/*があり、*/がない場合
       if(line.contains("*/")){//ロックコメントの*/だけがあった場合の処理
         if(!line.substring(line.length() -1).equals("/")){
-          System.out.println("通過");
           String[] words = line.split("*/");
           save_line += words[1];
         }
         f_comentout = 0;
+        if(save_line == null)save_line = "";
         return save_line;
       }else{
-        return null;//ロックコメントの*/が無くコメントアウト内なのでnullを返す
+        return "";//ロックコメントの*/が無くコメントアウト内なので空文字を返す
       }
     }
+    if(save_line == null)save_line = "";
     return line;
   }
 
@@ -123,13 +136,16 @@ public class check_quality{
 
       //仮引数の抽出部
       if(line.contains("FunctionDecl"))arg_saveline = line;
+      //if(arg_saveline.contains("used") && (line.contains("ParmVarDecl") && line.contains("used")))System.out.println("\n\n有り" + arg_saveline +"\n" + line);
       if(arg_saveline.contains("used") && (line.contains("ParmVarDecl") && line.contains("used")))List_Avaiable.add(make_avaiable(line,arg_saveline,2));
+      //if(arg_saveline.contains("used") && (line.contains("ParmVarDecl") && !line.contains("used")))System.out.println("\n\nない" + arg_saveline +"\n" + line);
 
       count++;//行数のカウント
     }
 
     for(avaiables avai:List_Avaiable)if(avai.type == 1)out.println("NAME_AVAIABLE," + avai.name + "," + avai.num_line);//変数名一覧をファイルに出力
     for(avaiables avai:List_Avaiable)if(avai.type == 2)out.println("NAME_ARGUMENT," + avai.name + "," + avai.num_line);//仮引数情報をファイルに出力
+
 
     in.close();
     out.close();
@@ -142,15 +158,30 @@ public class check_quality{
     avaiables avai = new avaiables();
     Boolean bool = new Boolean(false);
     String save = new String();
+    Integer check_col = new Integer(0);
 
-    avai.flag_used = 0;
+    avai.flag_unused = 0;
 
-    for(String word:words){//変数名の取得
+    avai.type = type;
+
+    for(String word:words){//変数、仮引数の名の取得　
       if(bool == true){
         avai.name = word;
         break;
       }
-      if(word.equals("used"))bool = true;//used の次に変数名が来るため、目印としてtrueに変更している。
+      if(word.equals("used")){
+        bool = true;//used の次に変数名が来るため、目印としてtrueに変更している。
+        check_col = 0;
+      }
+
+      if(check_col.equals(0) && word.contains("col:"))check_col = 1;
+
+      if(check_col.equals(1) && !word.contains("col:")){
+        avai.name = word;
+        avai.flag_unused = 1;
+        break;
+      }
+
     }
 
     for(String word:words){
@@ -165,7 +196,6 @@ public class check_quality{
         avai.num_line = line_num;
       }
     }
-    avai.type = type;
     return avai;
   }
 
