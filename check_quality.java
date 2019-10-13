@@ -43,22 +43,22 @@ public class check_quality{
 
   void check_name_unused(String check_file,ArrayList<avaiables> List_Avaiable,ArrayList<functions> ListFunc)throws IOException{
     BufferedReader in = new BufferedReader(new FileReader(check_file));
-    //PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
+    PrintWriter out = new PrintWriter(new FileWriter(check_file + ".info.csv", true));
     String line = new String();
     Integer line_count = new Integer(1);//何行目を検査しているかを記憶する変数
 
     while((line = in.readLine()) != null){
       line = Comentout(line);
       for(avaiables avai : List_Avaiable){
-        //if(line.contains(avai.name))check_unused(line,ListFunc,avai,line_count)
       }
       line_count++;
     }
-    for(avaiables avai: List_Avaiable)System.out.println(avai.type + ":" +  avai.name + ":" + avai.flag_unused);//全ての変数、仮引数の未使用であるか関する情報の出力
-  }
+    for(avaiables avai: List_Avaiable)if(avai.flag_unused.equals(1)){
+      out.println("UNUSED_AVAIABLE," + avai.name + "," + avai.num_line);//仮引数情報をファイルに出力
+    }
 
-  void check_unused(String line,ArrayList<functions> ListFunc,avaiables avai,Integer line_count){
-    //if(avai.num_line.equals(line_count));
+    in.close();
+    out.close();
   }
 
   String Comentout(String line){
