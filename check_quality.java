@@ -20,10 +20,24 @@ public class check_quality{
     Integer flag_unused;//使ったかどうかのフラグ　0:使っていない　1:使った
   }
 
+  public class setting_judg{
+    Integet nest_max;
+    Integer f_line_num;
+    Integer f_name_min;
+    Integer f_name_max;
+    Integer ava_name_min;
+    Integer ava_name_max;
+  }
+
   Integer f_comentout = new Integer(0);
 
   void run(String[] args)throws IOException{
     CheckQualityMethod(args[0]);
+    output_message(args[0]);
+  }
+
+  void output_message(String check_file)throws IOException{
+
   }
 
   void CheckQualityMethod(String check_file)throws IOException{
