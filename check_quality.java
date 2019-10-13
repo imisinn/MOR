@@ -136,9 +136,7 @@ public class check_quality{
 
       //仮引数の抽出部
       if(line.contains("FunctionDecl"))arg_saveline = line;
-      //if(arg_saveline.contains("used") && (line.contains("ParmVarDecl") && line.contains("used")))System.out.println("\n\n有り" + arg_saveline +"\n" + line);
       if(arg_saveline.contains("used") && (line.contains("ParmVarDecl") && line.contains("used")))List_Avaiable.add(make_avaiable(line,arg_saveline,2));
-      //if(arg_saveline.contains("used") && (line.contains("ParmVarDecl") && !line.contains("used")))System.out.println("\n\nない" + arg_saveline +"\n" + line);
 
       count++;//行数のカウント
     }

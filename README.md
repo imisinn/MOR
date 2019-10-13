@@ -17,10 +17,12 @@ OS:MacOS Mojave 10.14.4
 
 ## 出力内容について  
 
-* MAX_F_NEST:関数内の最大のネスト数
-* MAX_F_LINE:関数内の行数
-* NAME_FUNCTION:関数名
-* GOTO:goto文
-* NAME_FUNCTION:関数名と行数
-* NAME_AVAIABLE:変数名と行数
-* NAME_ARGUMENT:仮引数名と行数
+### xxx.info.csvの出力内容について  
+
+* MAX_F_NEST:関数内の最大のネスト数  
+* MAX_F_LINE:関数内の行数  
+* GOTO:goto文  
+* NAME_FUNCTION:関数名と行数  
+* NAME_AVAIABLE:変数名と行数  
+* NAME_ARGUMENT:仮引数名と行数  
+* UNUSED_AVAIABLE:未使用の変数について
