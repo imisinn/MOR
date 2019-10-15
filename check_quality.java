@@ -21,8 +21,8 @@ public class check_quality{
   }
 
   public class setting_judg{
-    Integet nest_max;
-    Integer f_line_num;
+    Integer nest_max;
+    Integer f_line_max;
     Integer f_name_min;
     Integer f_name_max;
     Integer ava_name_min;
@@ -37,7 +37,23 @@ public class check_quality{
   }
 
   void output_message(String check_file)throws IOException{
+    setting_judg sets = new setting_judg();
+    input_setting(sets);
+  }
 
+  void input_setting(setting_judg sets)throws IOException{
+    BufferedReader in = new BufferedReader(new FileReader("../setting.txt"));
+    String line = new String();
+
+    while((line = in.readLine()) != null){
+      String[] set = line.split(":");
+      if(set[0].equals("nest_max"))sets.nest_max = Integer.parseInt(set[1]);
+      else if(set[0].equals("f_line_max"))sets.f_line_max = Integer.parseInt(set[1]);
+      else if(set[0].equals("f_name_min"))sets.f_name_min = Integer.parseInt(set[1]);
+      else if(set[0].equals("f_name_max"))sets.f_name_max = Integer.parseInt(set[1]);
+      else if(set[0].equals("ava_name_min"))sets.ava_name_min = Integer.parseInt(set[1]);
+      else if(set[0].equals("ava_name_max"))sets.ava_name_max = Integer.parseInt(set[1]);
+    }
   }
 
   void CheckQualityMethod(String check_file)throws IOException{

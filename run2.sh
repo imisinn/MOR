@@ -18,6 +18,7 @@ elif [[ $1 =~ .*\.c ]]; then
   cd ../
   java -classpath ../ pickup_error $1
   clang -cc1 -ast-dump $1 &> AST.txt
+  cp ../setting.txt setting.txt
 else
   echo "c言語のファイルを用いてください"
 fi

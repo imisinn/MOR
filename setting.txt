@@ -1,6 +1,6 @@
-nest_max:
-f_line_max:
-f_name_min:
-f_name_max:
-ava_name_min:
-ava_name_max:
+nest_max:-1
+f_line_max:-1
+f_name_min:-1
+f_name_max:-1
+ava_name_min:-1
+ava_name_max:-1
