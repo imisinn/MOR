@@ -5,9 +5,9 @@ if [ $# -ne 1 ]; then
   echo "ファイルを1つ指定してください"
 elif [[ $1 =~ .*\.c ]]; then
   echo "c言語のファイルです"
-  mkdir free
-  cp $1 free/$1
-  cd free
+  mkdir $1dir
+  cp $1 $1dir/$1
+  cd $1dir
   java -classpath ../ delete_inc $1
   adlintize -o adlint
   java -classpath ../ change_langage

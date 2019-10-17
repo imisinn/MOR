@@ -39,10 +39,45 @@ public class check_quality{
   void output_message(String check_file)throws IOException{
     setting_judg sets = new setting_judg();
     input_setting(sets);
+    output_warning(check_file,sets);
+  }
+
+  void output_warning(String check_file,setting_judg sets)throws IOException{
+    BufferedReader in = new BufferedReader(new FileReader(check_file + ".info.csv"));
+    PrintWriter out = new PrintWriter(new FileWriter(check_file + ".warning.csv"));
+    String line = new String();
+
+    while((line = in.readLine()) != null){
+      String[] infos = line.split(",");
+      if(infos[0].equals("MAX_F_NEST")){
+        if(Integer.parseInt(infos[infos.length -1]) >= sets.nest_max){
+          out.println("DEEP_NEST,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+","+infos[5]+","+infos[1]+"のネストが深すぎます");
+        }
+      }else if(infos[0].equals("MAX_F_LINE")){
+        if(Integer.parseInt(infos[infos.length -1]) >= sets.f_line_max){
+          out.println("LONG_FUNCTION,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+","+infos[5]+","+infos[1]+"の関数が長すぎます");
+        }
+      }else if(infos[0].equals("GOTO")){
+        out.println("GOTO,"+infos[1]+","+infos[2]+","+infos[3]+",goto文があります");
+      }else if(infos[0].equals("NAME_FUNCTION") || (infos[0].equals("NAME_AVAIABLE") || infos[0].equals("NAME_ARGUMENT"))){
+        if(infos[0].equals("NAME_FUNCTION")){
+          if(infos[1].length() < sets.f_name_min)out.println("SHORT_FUNCTION_NAME,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+",関数名が短すぎます");
+          if(infos[1].length() > sets.f_name_max)out.println("LONG_FUNCTION_NAME,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+",関数名が長すぎます");
+        }else{
+          if(infos[1].length() < sets.ava_name_min)out.println("SHORT_AVAIABLE_NAME,"+infos[1]+","+infos[2]+",変数名が短すぎます。");
+          if(infos[1].length() > sets.ava_name_max)out.println("SHORT_AVAIABLE_NAME,"+infos[1]+","+infos[2]+",変数名が長すぎます。");
+        }
+      }else if(infos[0].equals("UNUSED_AVAIABLE")){
+        out.println("UNUSED_AVAIABLE,"+infos[1]+","+infos[2]+",未使用の変数です。");
+      }
+    }
+
+    in.close();
+    out.close();
   }
 
   void input_setting(setting_judg sets)throws IOException{
-    BufferedReader in = new BufferedReader(new FileReader("../setting.txt"));
+    BufferedReader in = new BufferedReader(new FileReader("setting.txt"));
     String line = new String();
 
     while((line = in.readLine()) != null){
@@ -54,6 +89,8 @@ public class check_quality{
       else if(set[0].equals("ava_name_min"))sets.ava_name_min = Integer.parseInt(set[1]);
       else if(set[0].equals("ava_name_max"))sets.ava_name_max = Integer.parseInt(set[1]);
     }
+
+    in.close();
   }
 
   void CheckQualityMethod(String check_file)throws IOException{
@@ -290,7 +327,7 @@ public class check_quality{
 
     while((line = in.readLine()) != null){
       String[] metrics_words = line.split(",",-1);
-      if(metrics_words.length >= 5)if(metrics_words[5].equals("W1072"))out.println("GOTO,"+metrics_words[1]+","+metrics_words[2]+","+metrics_words[3]);
+      if(metrics_words.length >= 5)if(metrics_words[5].equals("W1072"))out.println("GOTO,"+metrics_words[1].replace(".c.c",".c")+","+metrics_words[2]+","+metrics_words[3]);
     }
     in.close();
     out.close();
@@ -328,7 +365,7 @@ public class check_quality{
 
   String make_message(String[] metrics_words,String kind){
     Integer len = new Integer(metrics_words.length);
-    String message = new String(kind+","+metrics_words[2]+","+metrics_words[len-4]+","+metrics_words[len-3]+","+metrics_words[len-2]+","+metrics_words[len-1]);
+    String message = new String(kind+","+metrics_words[2]+","+metrics_words[len-4].replace(".c.c",".c")+","+metrics_words[len-3]+","+metrics_words[len-2]+","+metrics_words[len-1]);
     return message;
   }
 
