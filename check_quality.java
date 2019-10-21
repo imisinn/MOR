@@ -11,6 +11,8 @@ public class check_quality{
     String name;//関数名
     Integer start;//関数の始まりの行数
     Integer end;//関数の終わりの行数
+    Integer num_argument;//引数の数
+    String file_place;//ファイルのパス
   }
 
   public class avaiables{
@@ -27,6 +29,7 @@ public class check_quality{
     Integer f_name_max;
     Integer ava_name_min;
     Integer ava_name_max;
+    Integer f_argument_max;
   }
 
   Integer f_comentout = new Integer(0);
@@ -69,6 +72,10 @@ public class check_quality{
         }
       }else if(infos[0].equals("UNUSED_AVAIABLE")){
         out.println("UNUSED_AVAIABLE,"+infos[1]+","+infos[2]+",未使用の変数です。");
+      }else if(infos[0].equals("NUM_F_ARGUMENT")){
+        if(Integer.parseInt(infos[infos.length -1]) >= sets.f_argument_max){
+          out.println("MANY_ARGMENT,"+infos[1]+","+infos[2]+","+infos[3]+",関数"+infos[1]+"の引数が多すぎます。");
+        }
       }
     }
 
@@ -88,6 +95,7 @@ public class check_quality{
       else if(set[0].equals("f_name_max"))sets.f_name_max = Integer.parseInt(set[1]);
       else if(set[0].equals("ava_name_min"))sets.ava_name_min = Integer.parseInt(set[1]);
       else if(set[0].equals("ava_name_max"))sets.ava_name_max = Integer.parseInt(set[1]);
+      else if(set[0].equals("f_argument_max"))sets.f_argument_max = Integer.parseInt(set[1]);
     }
 
     in.close();
@@ -106,6 +114,31 @@ public class check_quality{
     ListFunc = check_function_name(check_file);
     List_Avaiable = check_avaiable_name(check_file);
     check_name_unused(check_file,List_Avaiable,ListFunc);
+    check_num_argument(check_file,List_Avaiable,ListFunc);
+  }
+
+  void check_num_argument(String check_file,ArrayList<avaiables> List_Avaiable,ArrayList<functions> ListFunc)throws IOException{
+    PrintWriter out = new PrintWriter(new FileWriter(check_file + ".info.csv", true));
+
+    for(functions func: ListFunc){
+      func.num_argument = 0;
+    }
+
+    for(avaiables avai: List_Avaiable){
+      if(avai.type == 2){//引数のみを処理するため
+        for(functions func: ListFunc){
+          if(avai.num_line == func.start){//引数の宣言の行数と関数の宣言の行数が一致した場合に処理
+            func.num_argument++;
+          }
+        }
+      }
+    }
+
+    for(functions func: ListFunc){
+      out.println("NUM_F_ARGUMENT,"+func.name+","+func.file_place+","+func.start+","+func.num_argument);//測定結果の出力
+    }
+
+    out.close();
   }
 
   void check_name_unused(String check_file,ArrayList<avaiables> List_Avaiable,ArrayList<functions> ListFunc)throws IOException{
@@ -301,6 +334,7 @@ public class check_quality{
     }
 
     for(functions aFunction:ListFunc){
+      aFunction.file_place = file_place;
       out.println("NAME_FUNCTION," + aFunction.name + "," + file_place +  "," + aFunction.start + ","+ aFunction.end);//関数名一覧をファイルに出力
     }
 
