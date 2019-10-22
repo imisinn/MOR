@@ -119,17 +119,18 @@ public class check_quality{
 
   void check_num_argument(String check_file,ArrayList<avaiables> List_Avaiable,ArrayList<functions> ListFunc)throws IOException{
     PrintWriter out = new PrintWriter(new FileWriter(check_file + ".info.csv", true));
+    BufferedReader in = new BufferedReader(new FileReader("adlint/" + check_file + ".c.met.csv"));
+    String line = new String();
 
     for(functions func: ListFunc){
       func.num_argument = 0;
     }
 
-    for(avaiables avai: List_Avaiable){
-      if(avai.type == 2){//引数のみを処理するため
+    while((line = in.readLine()) != null){
+      String words[] = line.split(",");
+      if(words[1].equals("FN_PARA")){
         for(functions func: ListFunc){
-          if(avai.num_line == func.start){//引数の宣言の行数と関数の宣言の行数が一致した場合に処理
-            func.num_argument++;
-          }
+          if(words[2].equals(func.name))func.num_argument = Integer.parseInt(words[words.length -1]);
         }
       }
     }
@@ -139,6 +140,7 @@ public class check_quality{
     }
 
     out.close();
+    in.close();
   }
 
   void check_name_unused(String check_file,ArrayList<avaiables> List_Avaiable,ArrayList<functions> ListFunc)throws IOException{
