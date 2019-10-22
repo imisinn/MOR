@@ -53,11 +53,11 @@ public class check_quality{
     while((line = in.readLine()) != null){
       String[] infos = line.split(",");
       if(infos[0].equals("MAX_F_NEST")){
-        if(Integer.parseInt(infos[infos.length -1]) >= sets.nest_max){
+        if(Integer.parseInt(infos[infos.length -1]) > sets.nest_max){
           out.println("DEEP_NEST,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+","+infos[5]+","+infos[1]+"のネストが深すぎます");
         }
       }else if(infos[0].equals("MAX_F_LINE")){
-        if(Integer.parseInt(infos[infos.length -1]) >= sets.f_line_max){
+        if(Integer.parseInt(infos[infos.length -1]) > sets.f_line_max){
           out.println("LONG_FUNCTION,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+","+infos[5]+","+infos[1]+"の関数が長すぎます");
         }
       }else if(infos[0].equals("GOTO")){
@@ -73,7 +73,7 @@ public class check_quality{
       }else if(infos[0].equals("UNUSED_AVAIABLE")){
         out.println("UNUSED_AVAIABLE,"+infos[1]+","+infos[2]+",未使用の変数です。");
       }else if(infos[0].equals("NUM_F_ARGUMENT")){
-        if(Integer.parseInt(infos[infos.length -1]) >= sets.f_argument_max){
+        if(Integer.parseInt(infos[infos.length -1]) > sets.f_argument_max){
           out.println("MANY_ARGMENT,"+infos[1]+","+infos[2]+","+infos[3]+",関数"+infos[1]+"の引数が多すぎます。");
         }
       }

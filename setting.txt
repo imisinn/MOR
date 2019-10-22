@@ -1,4 +1,4 @@
-nest_max:4
+nest_max:3
 f_line_max:15
 f_name_min:3
 f_name_max:15
