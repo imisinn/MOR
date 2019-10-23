@@ -68,7 +68,7 @@ public class check_quality{
           if(infos[1].length() > sets.f_name_max)out.println("LONG_FUNCTION_NAME,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+",関数名が長すぎます");
         }else{
           if(infos[1].length() < sets.ava_name_min)out.println("SHORT_AVAIABLE_NAME,"+infos[1]+","+infos[2]+",変数名が短すぎます。");
-          if(infos[1].length() > sets.ava_name_max)out.println("SHORT_AVAIABLE_NAME,"+infos[1]+","+infos[2]+",変数名が長すぎます。");
+          if(infos[1].length() > sets.ava_name_max)out.println("LONG_AVAIABLE_NAME,"+infos[1]+","+infos[2]+",変数名が長すぎます。");
         }
       }else if(infos[0].equals("UNUSED_AVAIABLE")){
         out.println("UNUSED_AVAIABLE,"+infos[1]+","+infos[2]+",未使用の変数です。");
