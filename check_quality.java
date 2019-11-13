@@ -76,6 +76,8 @@ public class check_quality{
         if(Integer.parseInt(infos[infos.length -1]) > sets.f_argument_max){
           out.println("MANY_ARGMENT,"+infos[1]+","+infos[2]+","+infos[3]+",関数"+infos[1]+"の引数が多すぎます。");
         }
+      }else if(infos[0].equals("UNUSED_ARGUMENT")){
+        out.println(line + ",仮引数`" + infos[1] + "`は未使用の仮引数です。");
       }
     }
 
@@ -106,8 +108,27 @@ public class check_quality{
     function_line(check_file);
     check_goto(check_file);
     check_name(check_file);
+    pickup_adlint(check_file);
   }
 
+  void pickup_adlint(String check_file)throws IOException{
+    File fileread = new File("adlint/" + check_file + ".c.msg.csv");
+    File filewrite = new File(check_file + ".info.csv");
+    BufferedReader in = new BufferedReader(new FileReader(fileread));
+    PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
+    String line;
+
+    while((line = in.readLine()) != null){
+      String words[] = line.split(",");
+      if(words.length >= 5)if(words[5].equals("W0031")){
+        String name = words[words.length -1].replace("仮引数 `","").replace("' は、この関数の中で使われていません。","");
+        out.println("UNUSED_ARGUMENT,"+name+ ","+words[1]+","+words[2]);
+      }
+    }
+
+    in.close();
+    out.close();
+  }
   void check_name(String check_file)throws IOException{
     ArrayList<variables> List_Variable = new ArrayList<>();
     ArrayList<functions> ListFunc = new ArrayList<>();
