@@ -15,7 +15,7 @@ public class check_quality{
     String file_place;//ファイルのパス
   }
 
-  public class avaiables{
+  public class variables{
     String name;//変数名
     Integer num_line;//変数の宣言の行数
     Integer type;//1:変数 2:仮引数
@@ -62,16 +62,16 @@ public class check_quality{
         }
       }else if(infos[0].equals("GOTO")){
         out.println("GOTO,"+infos[1]+","+infos[2]+","+infos[3]+",goto文があります");
-      }else if(infos[0].equals("NAME_FUNCTION") || (infos[0].equals("NAME_AVAIABLE") || infos[0].equals("NAME_ARGUMENT"))){
+      }else if(infos[0].equals("NAME_FUNCTION") || (infos[0].equals("NAME_VARIABLE") || infos[0].equals("NAME_ARGUMENT"))){
         if(infos[0].equals("NAME_FUNCTION")){
           if(infos[1].length() < sets.f_name_min)out.println("SHORT_FUNCTION_NAME,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+",関数名が短すぎます");
           if(infos[1].length() > sets.f_name_max)out.println("LONG_FUNCTION_NAME,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+",関数名が長すぎます");
         }else{
-          if(infos[1].length() < sets.ava_name_min)out.println("SHORT_AVAIABLE_NAME,"+infos[1]+","+infos[2]+ "," + infos[3] +",変数名が短すぎます。");
-          if(infos[1].length() > sets.ava_name_max)out.println("LONG_AVAIABLE_NAME,"+infos[1]+","+infos[2]+ "," + infos[3] + ",変数名が長すぎます。");
+          if(infos[1].length() < sets.ava_name_min)out.println("SHORT_VARIABLE_NAME,"+infos[1]+","+infos[2]+ "," + infos[3] +",変数名が短すぎます。");
+          if(infos[1].length() > sets.ava_name_max)out.println("LONG_VARIABLE_NAME,"+infos[1]+","+infos[2]+ "," + infos[3] + ",変数名が長すぎます。");
         }
-      }else if(infos[0].equals("UNUSED_AVAIABLE")){
-        out.println("UNUSED_AVAIABLE,"+infos[1]+","+infos[2]+ "," + infos[3]+",未使用の変数です。");
+      }else if(infos[0].equals("UNUSED_VARIABLE")){
+        out.println("UNUSED_VARIABLE,"+infos[1]+","+infos[2]+ "," + infos[3]+",未使用の変数です。");
       }else if(infos[0].equals("NUM_F_ARGUMENT")){
         if(Integer.parseInt(infos[infos.length -1]) > sets.f_argument_max){
           out.println("MANY_ARGMENT,"+infos[1]+","+infos[2]+","+infos[3]+",関数"+infos[1]+"の引数が多すぎます。");
@@ -109,15 +109,15 @@ public class check_quality{
   }
 
   void check_name(String check_file)throws IOException{
-    ArrayList<avaiables> List_Avaiable = new ArrayList<>();
+    ArrayList<variables> List_Variable = new ArrayList<>();
     ArrayList<functions> ListFunc = new ArrayList<>();
     ListFunc = check_function_name(check_file);
-    List_Avaiable = check_avaiable_name(check_file);
-    check_name_unused(check_file,List_Avaiable,ListFunc);
-    check_num_argument(check_file,List_Avaiable,ListFunc);
+    List_Variable = check_variable_name(check_file);
+    check_name_unused(check_file,List_Variable,ListFunc);
+    check_num_argument(check_file,List_Variable,ListFunc);
   }
 
-  void check_num_argument(String check_file,ArrayList<avaiables> List_Avaiable,ArrayList<functions> ListFunc)throws IOException{
+  void check_num_argument(String check_file,ArrayList<variables> List_Variable,ArrayList<functions> ListFunc)throws IOException{
     PrintWriter out = new PrintWriter(new FileWriter(check_file + ".info.csv", true));
     BufferedReader in = new BufferedReader(new FileReader("adlint/" + check_file + ".c.met.csv"));
     String line = new String();
@@ -143,7 +143,7 @@ public class check_quality{
     in.close();
   }
 
-  void check_name_unused(String check_file,ArrayList<avaiables> List_Avaiable,ArrayList<functions> ListFunc)throws IOException{
+  void check_name_unused(String check_file,ArrayList<variables> List_Variable,ArrayList<functions> ListFunc)throws IOException{
     BufferedReader in = new BufferedReader(new FileReader(check_file));
     PrintWriter out = new PrintWriter(new FileWriter(check_file + ".info.csv", true));
     String line = new String();
@@ -151,12 +151,12 @@ public class check_quality{
 
     while((line = in.readLine()) != null){
       line = Comentout(line);
-      for(avaiables avai : List_Avaiable){
+      for(variables avai : List_Variable){
       }
       line_count++;
     }
-    for(avaiables avai: List_Avaiable)if(avai.flag_unused.equals(1)){
-      out.println("UNUSED_AVAIABLE," + avai.name + "," + check_file + "," + avai.num_line);//仮引数情報をファイルに出力
+    for(variables avai: List_Variable)if(avai.flag_unused.equals(1)){
+      out.println("UNUSED_VARIABLE," + avai.name + "," + check_file + "," + avai.num_line);//仮引数情報をファイルに出力
     }
 
     in.close();
@@ -220,7 +220,7 @@ public class check_quality{
     return line;
   }
 
-  ArrayList<avaiables> check_avaiable_name(String check_file)throws IOException{
+  ArrayList<variables> check_variable_name(String check_file)throws IOException{
     File fileread = new File("AST.txt");
     File filewrite = new File(check_file + ".info.csv");
     BufferedReader in = new BufferedReader(new FileReader(fileread));
@@ -228,33 +228,33 @@ public class check_quality{
     String line,linesave = new String(),arg_saveline = new String();
     Boolean bool = new Boolean(false);
     Integer count = new Integer(1);
-    ArrayList<avaiables> List_Avaiable = new ArrayList<>();
+    ArrayList<variables> List_Variable = new ArrayList<>();
 
     while((line = in.readLine()) != null){
       if(line.contains("VarDecl") && !line.contains("ParmVarDecl"))bool = true;//変数の抽出部　始まり
       if(line.contains("line:"))linesave = line;
-      if(bool)List_Avaiable.add(make_avaiable(line,linesave,1));
+      if(bool)List_Variable.add(make_variable(line,linesave,1));
       bool = false;//変数の抽出部　終わり
 
       //仮引数の抽出部
       if(line.contains("FunctionDecl"))arg_saveline = line;
-      if(arg_saveline.contains("used") && (line.contains("ParmVarDecl") && line.contains("used")))List_Avaiable.add(make_avaiable(line,arg_saveline,2));
+      if(arg_saveline.contains("used") && (line.contains("ParmVarDecl") && line.contains("used")))List_Variable.add(make_variable(line,arg_saveline,2));
 
       count++;//行数のカウント
     }
 
-    for(avaiables avai:List_Avaiable)if(avai.type == 1)out.println("NAME_AVAIABLE," + avai.name + "," + check_file + "," + avai.num_line);//変数名一覧をファイルに出力
-    for(avaiables avai:List_Avaiable)if(avai.type == 2)out.println("NAME_ARGUMENT," + avai.name + "," + check_file + "," + avai.num_line);//仮引数情報をファイルに出力
+    for(variables avai:List_Variable)if(avai.type == 1)out.println("NAME_VARIABLE," + avai.name + "," + check_file + "," + avai.num_line);//変数名一覧をファイルに出力
+    for(variables avai:List_Variable)if(avai.type == 2)out.println("NAME_ARGUMENT," + avai.name + "," + check_file + "," + avai.num_line);//仮引数情報をファイルに出力
 
     in.close();
     out.close();
-    return List_Avaiable;
+    return List_Variable;
   }
 
-  avaiables make_avaiable(String line,String save_line,Integer type)throws IOException{
+  variables make_variable(String line,String save_line,Integer type)throws IOException{
     String[] words = line.split(" ",-1);
     String name = new String();
-    avaiables avai = new avaiables();
+    variables avai = new variables();
     Boolean bool = new Boolean(false);
     String save = new String();
     Integer check_col = new Integer(0);
