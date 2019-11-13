@@ -67,11 +67,11 @@ public class check_quality{
           if(infos[1].length() < sets.f_name_min)out.println("SHORT_FUNCTION_NAME,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+",関数名が短すぎます");
           if(infos[1].length() > sets.f_name_max)out.println("LONG_FUNCTION_NAME,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+",関数名が長すぎます");
         }else{
-          if(infos[1].length() < sets.ava_name_min)out.println("SHORT_AVAIABLE_NAME,"+infos[1]+","+infos[2]+",変数名が短すぎます。");
-          if(infos[1].length() > sets.ava_name_max)out.println("LONG_AVAIABLE_NAME,"+infos[1]+","+infos[2]+",変数名が長すぎます。");
+          if(infos[1].length() < sets.ava_name_min)out.println("SHORT_AVAIABLE_NAME,"+infos[1]+","+infos[2]+ "," + infos[3] +",変数名が短すぎます。");
+          if(infos[1].length() > sets.ava_name_max)out.println("LONG_AVAIABLE_NAME,"+infos[1]+","+infos[2]+ "," + infos[3] + ",変数名が長すぎます。");
         }
       }else if(infos[0].equals("UNUSED_AVAIABLE")){
-        out.println("UNUSED_AVAIABLE,"+infos[1]+","+infos[2]+",未使用の変数です。");
+        out.println("UNUSED_AVAIABLE,"+infos[1]+","+infos[2]+ "," + infos[3]+",未使用の変数です。");
       }else if(infos[0].equals("NUM_F_ARGUMENT")){
         if(Integer.parseInt(infos[infos.length -1]) > sets.f_argument_max){
           out.println("MANY_ARGMENT,"+infos[1]+","+infos[2]+","+infos[3]+",関数"+infos[1]+"の引数が多すぎます。");
@@ -156,7 +156,7 @@ public class check_quality{
       line_count++;
     }
     for(avaiables avai: List_Avaiable)if(avai.flag_unused.equals(1)){
-      out.println("UNUSED_AVAIABLE," + avai.name + "," + avai.num_line);//仮引数情報をファイルに出力
+      out.println("UNUSED_AVAIABLE," + avai.name + "," + check_file + "," + avai.num_line);//仮引数情報をファイルに出力
     }
 
     in.close();
@@ -243,9 +243,8 @@ public class check_quality{
       count++;//行数のカウント
     }
 
-    for(avaiables avai:List_Avaiable)if(avai.type == 1)out.println("NAME_AVAIABLE," + avai.name + "," + avai.num_line);//変数名一覧をファイルに出力
-    for(avaiables avai:List_Avaiable)if(avai.type == 2)out.println("NAME_ARGUMENT," + avai.name + "," + avai.num_line);//仮引数情報をファイルに出力
-
+    for(avaiables avai:List_Avaiable)if(avai.type == 1)out.println("NAME_AVAIABLE," + avai.name + "," + check_file + "," + avai.num_line);//変数名一覧をファイルに出力
+    for(avaiables avai:List_Avaiable)if(avai.type == 2)out.println("NAME_ARGUMENT," + avai.name + "," + check_file + "," + avai.num_line);//仮引数情報をファイルに出力
 
     in.close();
     out.close();
