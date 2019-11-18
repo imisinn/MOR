@@ -117,6 +117,8 @@ public class check_quality{
     BufferedReader in = new BufferedReader(new FileReader(fileread));
     PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
     String line;
+    File fileread2 = new File("adlint/" + check_file + ".c.met.csv");
+    BufferedReader in2 = new BufferedReader(new FileReader(fileread2));
 
     while((line = in.readLine()) != null){
       String words[] = line.split(",");
@@ -124,6 +126,11 @@ public class check_quality{
         String name = words[words.length -1].replace("仮引数 `","").replace("' は、この関数の中で使われていません。","");
         out.println("UNUSED_ARGUMENT,"+name+ ","+words[1]+","+words[2]);
       }
+    }
+
+    while((line = in2.readLine()) != null){
+      String words[] = line.split(",");
+      if(words.length >= 4)if(words[1].equals("FL_STMT"))out.println("SENTE_NUM,"+check_file+","+words[3]);
     }
 
     in.close();
