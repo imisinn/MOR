@@ -1,5 +1,5 @@
 nest_max:3
-f_line_max:15
+f_line_max:25
 f_name_min:3
 f_name_max:15
 ava_name_min:3
