@@ -1,6 +1,5 @@
 #!/bin/bash
-
-# １つのファイルを解析するため
+# １つのファイルを解析、抽出する用
 if [ $# -ne 1 ]; then
   echo "ファイルを1つ指定してください"
 elif [[ $1 =~ .*\.c ]]; then
@@ -19,6 +18,8 @@ elif [[ $1 =~ .*\.c ]]; then
   java -classpath ../ pickup_error $1
   clang -cc1 -ast-dump $1 &> AST.txt
   cp ../setting.txt setting.txt
+  cd $1dir
+  java -classpath ../ check_quality $1
 else
   echo "c言語のファイルを用いてください"
 fi
