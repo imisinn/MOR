@@ -32,7 +32,7 @@ public class check_quality{
     Integer f_argument_max;
   }
 
-  Integer f_comentout = Integer.valueOf(1);
+  Integer f_comentout = Integer.valueOf(0);
 
   void run(String[] args)throws IOException{
     CheckQualityMethod(args[0]);
