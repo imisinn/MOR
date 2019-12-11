@@ -32,7 +32,7 @@ public class check_quality{
     Integer f_argument_max;
   }
 
-  Integer f_comentout = new Integer(0);
+  Integer f_comentout = Integer.valueOf(1);
 
   void run(String[] args)throws IOException{
     CheckQualityMethod(args[0]);
@@ -175,7 +175,7 @@ public class check_quality{
     BufferedReader in = new BufferedReader(new FileReader(check_file));
     PrintWriter out = new PrintWriter(new FileWriter(check_file + ".info.csv", true));
     String line = new String();
-    Integer line_count = new Integer(1);//何行目を検査しているかを記憶する変数
+    Integer line_count = Integer.valueOf(1);//何行目を検査しているかを記憶する変数
 
     while((line = in.readLine()) != null){
       line = Comentout(line);
@@ -254,8 +254,8 @@ public class check_quality{
     BufferedReader in = new BufferedReader(new FileReader(fileread));
     PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
     String line,linesave = new String(),arg_saveline = new String();
-    Boolean bool = new Boolean(false);
-    Integer count = new Integer(1);
+    Boolean bool = Boolean.valueOf(false);
+    Integer count = Integer.valueOf(1);
     ArrayList<variables> List_Variable = new ArrayList<>();
 
     while((line = in.readLine()) != null){
@@ -283,9 +283,9 @@ public class check_quality{
     String[] words = line.split(" ",-1);
     String name = new String();
     variables avai = new variables();
-    Boolean bool = new Boolean(false);
+    Boolean bool = Boolean.valueOf(false);
     String save = new String();
-    Integer check_col = new Integer(0);
+    Integer check_col = Integer.valueOf(0);
 
     avai.flag_unused = 0;
 
@@ -327,7 +327,7 @@ public class check_quality{
   }
 
   Integer pichup_num_line(String words)throws IOException{
-    Integer num = new Integer(0);
+    Integer num = Integer.valueOf(0);
     String[] word = words.split(":",-1);
     if(word.length < 3)return -1;
     if(!isNumber(word[1]))return -2;
@@ -427,7 +427,7 @@ public class check_quality{
   }
 
   String make_message(String[] metrics_words,String kind){
-    Integer len = new Integer(metrics_words.length);
+    Integer len = Integer.valueOf(metrics_words.length);
     String message = new String(kind+","+metrics_words[2]+","+metrics_words[len-4].replace(".c.c",".c")+","+metrics_words[len-3]+","+metrics_words[len-2]+","+metrics_words[len-1]);
     return message;
   }
