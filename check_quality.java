@@ -30,6 +30,7 @@ public class check_quality{
     Integer ava_name_min;
     Integer ava_name_max;
     Integer f_argument_max;
+    Integer f_cyclomatic;
   }
 
   Integer f_comentout = Integer.valueOf(0);
@@ -78,6 +79,10 @@ public class check_quality{
         }
       }else if(infos[0].equals("UNUSED_ARGUMENT")){
         out.println(line + ",仮引数`" + infos[1] + "`は未使用の仮引数です。");
+      }else if(infos[0].equals("NUM_CYCLOMATIC")){
+        if(Integer.parseInt(infos[infos.length -1]) > sets.f_cyclomatic){
+          out.println("MANY_CYCLOMATIC,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+","+infos[5]+","+"関数"+infos[1]+"が複雑すぎます。");
+        }
       }
     }
 
@@ -98,6 +103,7 @@ public class check_quality{
       else if(set[0].equals("ava_name_min"))sets.ava_name_min = Integer.parseInt(set[1]);
       else if(set[0].equals("ava_name_max"))sets.ava_name_max = Integer.parseInt(set[1]);
       else if(set[0].equals("f_argument_max"))sets.f_argument_max = Integer.parseInt(set[1]);
+      else if(set[0].equals("f_cyclomatic"))sets.f_cyclomatic = Integer.parseInt(set[1]);
     }
 
     in.close();
@@ -109,6 +115,25 @@ public class check_quality{
     check_goto(check_file);
     check_name(check_file);
     pickup_adlint(check_file);
+    check_cyclomatic(check_file);
+  }
+
+  void check_cyclomatic(String check_file)throws IOException{
+    File fileread = new File("adlint/" + check_file + ".c.met.csv");
+    File filewrite = new File(check_file + ".info.csv");
+    BufferedReader in = new BufferedReader(new FileReader(fileread));
+    PrintWriter out = new PrintWriter(new FileWriter(filewrite, true));
+    String line;
+
+    while((line = in.readLine()) != null){
+      if(line.contains("FN_CYCM")){
+        String words[] = line.split(",");
+        out.println("NUM_CYCLOMATIC,"+words[2]+","+check_file+","+words[words.length-3]+","+words[words.length-2]+","+words[words.length-1]);
+      }
+    }
+
+    in.close();
+    out.close();
   }
 
   void pickup_adlint(String check_file)throws IOException{
