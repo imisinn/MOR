@@ -31,6 +31,7 @@ public class check_quality{
     Integer ava_name_max;
     Integer f_argument_max;
     Integer f_cyclomatic;
+    Integer max_grobal;
   }
 
   Integer f_comentout = Integer.valueOf(0);
@@ -83,6 +84,10 @@ public class check_quality{
         if(Integer.parseInt(infos[infos.length -1]) > sets.f_cyclomatic){
           out.println("MANY_CYCLOMATIC,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+","+infos[5]+","+"関数"+infos[1]+"が複雑すぎます。");
         }
+      }else if(infos[0].equals("NUM_GROBAL")){
+        if(Integer.parseInt(infos[infos.length -1]) > sets.max_grobal){
+          out.println("NAMY_GROBAL_VARIABLE,"+infos[1]+","+infos[2]+",グローバル変数が多すぎます．");
+        }
       }
     }
 
@@ -104,6 +109,7 @@ public class check_quality{
       else if(set[0].equals("ava_name_max"))sets.ava_name_max = Integer.parseInt(set[1]);
       else if(set[0].equals("f_argument_max"))sets.f_argument_max = Integer.parseInt(set[1]);
       else if(set[0].equals("f_cyclomatic"))sets.f_cyclomatic = Integer.parseInt(set[1]);
+      else if(set[0].equals("max_grobal"))sets.max_grobal = Integer.parseInt(set[1]);
     }
 
     in.close();
@@ -282,10 +288,12 @@ public class check_quality{
     Boolean bool = Boolean.valueOf(false);
     Integer count = Integer.valueOf(1);
     ArrayList<variables> List_Variable = new ArrayList<>();
+    Integer num_grobal = Integer.valueOf(0);
 
     while((line = in.readLine()) != null){
       if(line.contains("VarDecl") && !line.contains("ParmVarDecl"))bool = true;//変数の抽出部　始まり
       if(line.contains("line:"))linesave = line;
+      if(bool)num_grobal+=check_grobal(line);
       if(bool)List_Variable.add(make_variable(line,linesave,1));
       bool = false;//変数の抽出部　終わり
 
@@ -299,9 +307,18 @@ public class check_quality{
     for(variables avai:List_Variable)if(avai.type == 1)out.println("NAME_VARIABLE," + avai.name + "," + check_file + "," + avai.num_line);//変数名一覧をファイルに出力
     for(variables avai:List_Variable)if(avai.type == 2)out.println("NAME_ARGUMENT," + avai.name + "," + check_file + "," + avai.num_line);//仮引数情報をファイルに出力
 
+    out.println("NUM_GROBAL,"+check_file+","+num_grobal);
+
     in.close();
     out.close();
     return List_Variable;
+  }
+
+  Integer check_grobal(String line)throws IOException{
+    Integer num = Integer.valueOf(0);
+    String words[] = line.split(" ");
+    if(words[0].equals("|-VarDecl"))num = 1;
+    return num;
   }
 
   variables make_variable(String line,String save_line,Integer type)throws IOException{

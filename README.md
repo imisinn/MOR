@@ -28,6 +28,8 @@ OS:MacOS Mojave 10.14.4
 * NAME_ARGUMENT:仮引数名と行数  
 * UNUSED_AVAIABLE:未使用の変数について
 * NUM_F_ARGUMENT:関数の仮引数の個数
+* NUM_CYCLOMATIC:関数のサイクロマティック数
+* NUM_GROBAL:ソースコードのグローバル変数の個数
 
 ### xxx.c.worning.csvの出力内容について  
 * DEEP_NEST:ネストが深い
@@ -39,6 +41,8 @@ OS:MacOS Mojave 10.14.4
 * LONG_AVAIABLE_NAME:変数名が長い
 * UNUSED_AVAIABLE:未使用の変数がある
 * MANY_ARGMENT:関数の引数が多い
+* MANY_CYCLOMATIC:関数のサイクロマティック数が多い
+* NAMY_GROBAL_VARIABLE:グローバル変数の個数が多い
 
 ### setting.txtについて
 setting.txtは判定をするための基準を決定するためのファイルである。
@@ -50,3 +54,5 @@ setting.txtは判定をするための基準を決定するためのファイル
 * ava_name_min:変数名や引数名の文字数の最小数
 * ava_name_max:変数名や引数名の文字数の最大数
 * f_argument_max:関数の引数の最大数
+* f_cyclomatic:サイクロマティック数の最大数
+* max_grobal: グローバル変数の最大数

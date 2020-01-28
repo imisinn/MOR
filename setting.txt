@@ -5,4 +5,5 @@ f_name_max:15
 ava_name_min:3
 ava_name_max:15
 f_argument_max:3
-f_cyclomatic:5
+f_cyclomatic:20
+max_grobal:5
