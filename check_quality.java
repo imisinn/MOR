@@ -63,7 +63,7 @@ public class check_quality{
           out.println("LONG_FUNCTION,"+infos[2]+","+infos[3]+","+infos[1]+"の関数が長すぎます。");
         }
       }else if(infos[0].equals("GOTO")){
-        out.println("GOTO,"+infos[1]+","+infos[2]+","+",goto文があります。");
+        out.println("GOTO,"+infos[1]+","+infos[2]+","+"goto文があります。");
       }else if(infos[0].equals("NAME_FUNCTION") || (infos[0].equals("NAME_VARIABLE") || infos[0].equals("NAME_ARGUMENT"))){
         if(infos[0].equals("NAME_FUNCTION")){
           if(infos[1].length() < sets.f_name_min)out.println("SHORT_FUNCTION_NAME,"+infos[2]+","+infos[3]+","+"関数名"+infos[0]+"が短すぎます。");
