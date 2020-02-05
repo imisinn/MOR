@@ -56,37 +56,37 @@ public class check_quality{
       String[] infos = line.split(",");
       if(infos[0].equals("MAX_F_NEST")){
         if(Integer.parseInt(infos[infos.length -1]) > sets.nest_max){
-          out.println("DEEP_NEST,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+","+infos[5]+","+infos[1]+"のネストが深すぎます");
+          out.println("DEEP_NEST,"+infos[2]+","+infos[3]+","+infos[1]+"のネストが深すぎます");
         }
       }else if(infos[0].equals("MAX_F_LINE")){
         if(Integer.parseInt(infos[infos.length -1]) > sets.f_line_max){
-          out.println("LONG_FUNCTION,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+","+infos[5]+","+infos[1]+"の関数が長すぎます");
+          out.println("LONG_FUNCTION,"+infos[2]+","+infos[3]+","+infos[1]+"の関数が長すぎます");
         }
       }else if(infos[0].equals("GOTO")){
-        out.println("GOTO,"+infos[1]+","+infos[2]+","+infos[3]+",goto文があります");
+        out.println("GOTO,"+infos[1]+","+infos[2]+","+",goto文があります");
       }else if(infos[0].equals("NAME_FUNCTION") || (infos[0].equals("NAME_VARIABLE") || infos[0].equals("NAME_ARGUMENT"))){
         if(infos[0].equals("NAME_FUNCTION")){
-          if(infos[1].length() < sets.f_name_min)out.println("SHORT_FUNCTION_NAME,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+",関数名が短すぎます");
-          if(infos[1].length() > sets.f_name_max)out.println("LONG_FUNCTION_NAME,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+",関数名が長すぎます");
+          if(infos[1].length() < sets.f_name_min)out.println("SHORT_FUNCTION_NAME,"+infos[2]+","+infos[3]+","+"関数名"+infos[0]+"が短すぎます。");
+          if(infos[1].length() > sets.f_name_max)out.println("LONG_FUNCTION_NAME,"+infos[2]+","+infos[3]+","+"関数名"+infos[0]+"が長すぎます。");
         }else{
-          if(infos[1].length() < sets.ava_name_min)out.println("SHORT_VARIABLE_NAME,"+infos[1]+","+infos[2]+ "," + infos[3] +",変数名が短すぎます。");
-          if(infos[1].length() > sets.ava_name_max)out.println("LONG_VARIABLE_NAME,"+infos[1]+","+infos[2]+ "," + infos[3] + ",変数名が長すぎます。");
+          if(infos[1].length() < sets.ava_name_min)out.println("SHORT_VARIABLE_NAME,"+infos[2]+ "," + infos[3] +",変数名"+infos[1]+"短すぎます。");
+          if(infos[1].length() > sets.ava_name_max)out.println("LONG_VARIABLE_NAME,"+infos[2]+ "," + infos[3] +",変数名"+infos[1]+ "長すぎます。");
         }
       }else if(infos[0].equals("UNUSED_VARIABLE")){
-        out.println("UNUSED_VARIABLE,"+infos[1]+","+infos[2]+ "," + infos[3]+",未使用の変数です。");
+        out.println("UNUSED_VARIABLE,"+infos[2]+ "," + infos[3]+",変数"+infos[1]+"が未使用の変数です。");
       }else if(infos[0].equals("NUM_F_ARGUMENT")){
         if(Integer.parseInt(infos[infos.length -1]) > sets.f_argument_max){
           out.println("MANY_ARGMENT,"+infos[1]+","+infos[2]+","+infos[3]+",関数"+infos[1]+"の引数が多すぎます。");
         }
       }else if(infos[0].equals("UNUSED_ARGUMENT")){
-        out.println(line + ",仮引数`" + infos[1] + "`は未使用の仮引数です。");
+        out.println("UNUSED_ARGUMENT,"+infos[2]+ "," + infos[3]+ ",仮引数`" + infos[1] + "`は未使用の仮引数です。");
       }else if(infos[0].equals("NUM_CYCLOMATIC")){
         if(Integer.parseInt(infos[infos.length -1]) > sets.f_cyclomatic){
-          out.println("MANY_CYCLOMATIC,"+infos[1]+","+infos[2]+","+infos[3]+","+infos[4]+","+infos[5]+","+"関数"+infos[1]+"が複雑すぎます。");
+          out.println("MANY_CYCLOMATIC,"+infos[2]+","+infos[3]+","+infos[5]+","+"関数"+infos[1]+"が複雑すぎます(" + infos[5]+")。");
         }
       }else if(infos[0].equals("NUM_GROBAL")){
         if(Integer.parseInt(infos[infos.length -1]) > sets.max_grobal){
-          out.println("NAMY_GROBAL_VARIABLE,"+infos[1]+","+infos[2]+",グローバル変数が多すぎます．");
+          out.println("NAMY_GROBAL_VARIABLE,"+infos[1]+",,"+",グローバル変数が多すぎます(" + infos[2] +")。");
         }
       }
     }
